@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - PublicListViewInput
 protocol PublicListViewInput: AnyObject {
     func showInDevelopmentAlert()
     func reloadData()
@@ -16,6 +18,7 @@ protocol PublicListViewInput: AnyObject {
     func showErrorToast(_ message: String)
 }
 
+// MARK: - PublicListViewOutput
 protocol PublicListViewOutput: AnyObject {
     func viewDidLoad()
     func viewWillAppear()
@@ -31,6 +34,7 @@ protocol PublicListViewOutput: AnyObject {
     func publicSet(at index: Int) -> PublicSetModel
 }
 
+// MARK: - PublicListViewController
 final class PublicListViewController: UIViewController {
     var output: PublicListViewOutput?
 
@@ -208,6 +212,7 @@ final class PublicListViewController: UIViewController {
     }
 }
 
+// MARK: - PublicListViewController Extension
 extension PublicListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         output?.numberOfSets() ?? 0
@@ -240,6 +245,7 @@ extension PublicListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - PublicListViewController Extension
 extension PublicListViewController: PublicListViewInput {
     func showInDevelopmentAlert() {
         let alert = UIAlertController(title: nil, message: "Функция в разработке", preferredStyle: .alert)
@@ -327,6 +333,7 @@ extension PublicListViewController: PublicListViewInput {
     }
 }
 
+// MARK: - PublicListViewController Extension
 extension PublicListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         output?.didSearch(text: searchText)

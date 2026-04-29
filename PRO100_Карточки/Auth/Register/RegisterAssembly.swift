@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - RegisterAssembly
 final class RegisterAssembly {
     func makeModule() -> UIViewController {
         let viewController = RegisterViewController()

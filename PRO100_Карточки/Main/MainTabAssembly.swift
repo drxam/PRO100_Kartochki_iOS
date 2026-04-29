@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - MainTabAssembly
 final class MainTabAssembly {
     func makeModule() -> UIViewController {
         let setsAssembly = SetsListAssembly()

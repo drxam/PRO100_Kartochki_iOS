@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - SetDetailPresenter
 final class SetDetailPresenter {
     weak var view: SetDetailViewInput?
     var router: SetDetailRouterProtocol?
@@ -20,6 +22,7 @@ final class SetDetailPresenter {
     }
 }
 
+// MARK: - SetDetailPresenter Extension
 extension SetDetailPresenter: SetDetailViewOutput {
     func viewDidLoad() {
         loadData()

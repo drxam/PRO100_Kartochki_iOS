@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - SetEditorViewController
 final class SetEditorViewController: UIViewController {
     var output: SetEditorViewOutput?
 
@@ -277,6 +279,7 @@ final class SetEditorViewController: UIViewController {
     }
 }
 
+// MARK: - SetEditorViewController Extension
 extension SetEditorViewController: SetEditorViewInput {
     func configure(title: String, saveTitle: String, draft: SetEditorDraft, categoryPickTitles: [String]) {
         self.title = title

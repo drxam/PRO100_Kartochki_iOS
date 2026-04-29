@@ -3,9 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
-/// Низкоуровневые HTTP-запросы к API с Bearer-токеном.
+// MARK: - Pro100APIClient
 enum Pro100APIClient {
     static let session: URLSession = .shared
 
@@ -60,7 +61,6 @@ enum Pro100APIClient {
         return req
     }
 
-    /// Один HTTP-вызов; при 401 с Bearer **один раз** пробует `POST /auth/refresh` и повторяет тот же запрос с новым `Authorization`.
     static func dataTask(_ request: URLRequest, completion: @escaping (Result<(HTTPURLResponse, Data), AuthError>) -> Void) {
         dataTaskWithOptionalRefresh(request, alreadyRefreshed: false, completion: completion)
     }

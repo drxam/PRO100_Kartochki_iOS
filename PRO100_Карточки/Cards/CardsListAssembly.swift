@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - CardsListAssembly
 final class CardsListAssembly {
     func makeModule() -> UIViewController {
         let vc = CardsListViewController()

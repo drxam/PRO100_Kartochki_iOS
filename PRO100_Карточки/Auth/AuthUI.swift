@@ -2,13 +2,12 @@
 //  AuthUI.swift
 //  PRO100_Карточки
 //
-//  Shared UI components for all auth screens.
-//
+
 
 import UIKit
 
-// MARK: - GradientButton
 
+// MARK: - GradientButton
 final class GradientButton: UIButton {
     private let grad = CAGradientLayer()
 
@@ -34,8 +33,8 @@ final class GradientButton: UIButton {
     }
 }
 
-// MARK: - AuthFieldRow
 
+// MARK: - AuthFieldRow
 final class AuthFieldRow: UIView {
 
     private let icon  = UIImageView()
@@ -119,8 +118,8 @@ final class AuthFieldRow: UIView {
     }
 }
 
-// MARK: - AuthDivider
 
+// MARK: - AuthDivider
 final class AuthDivider: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -160,7 +159,6 @@ final class AuthDivider: UIView {
     }
 }
 
-// MARK: - Auth glassmorphism card helper
 
 func makeAuthCard() -> (card: UIView, blur: UIVisualEffectView) {
     let card = UIView()
@@ -181,8 +179,8 @@ func makeAuthCard() -> (card: UIView, blur: UIVisualEffectView) {
     return (card, blur)
 }
 
-// MARK: - Validation rule row (for Register)
 
+// MARK: - ValidationRow
 final class ValidationRow: UIView {
     private let dot  = UILabel()
     private let text = UILabel()

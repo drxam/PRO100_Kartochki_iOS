@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - ProfileViewInput
 protocol ProfileViewInput: AnyObject {
     func showInDevelopmentAlert()
     func showLogoutConfirm(onConfirm: @escaping () -> Void)
@@ -12,12 +14,14 @@ protocol ProfileViewInput: AnyObject {
     func showError(_ message: String)
 }
 
+// MARK: - ProfileViewOutput
 protocol ProfileViewOutput: AnyObject {
     func viewDidLoad()
     func didTapEditProfile()
     func didTapLogout()
 }
 
+// MARK: - ProfileViewController
 final class ProfileViewController: UIViewController {
     var output: ProfileViewOutput?
 
@@ -93,7 +97,6 @@ final class ProfileViewController: UIViewController {
         styleCard(headerCard)
         stackView.addArrangedSubview(headerCard)
 
-        // Gradient avatar
         let avatarGrad = CAGradientLayer()
         avatarGrad.colors = [DS.royal.cgColor, DS.crimson.cgColor]
         avatarGrad.startPoint = CGPoint(x: 0, y: 0)
@@ -222,7 +225,6 @@ final class ProfileViewController: UIViewController {
         let titleLabel = sectionTitle("Действия")
         actionsCard.addSubview(titleLabel)
 
-        // Edit button — gradient
         let editGradBtn = GradientButton()
         editGradBtn.setTitle("Редактировать профиль", for: .normal)
         editGradBtn.setTitleColor(.white, for: .normal)
@@ -234,10 +236,9 @@ final class ProfileViewController: UIViewController {
         editGradBtn.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
         editGradBtn.translatesAutoresizingMaskIntoConstraints = false
         actionsCard.addSubview(editGradBtn)
-        // keep reference via editButton tag workaround — reassign
         editButton.removeFromSuperview()
         actionsCard.addSubview(editButton)
-        editButton.isHidden = true   // hidden — использован editGradBtn
+        editButton.isHidden = true
 
         logoutButton.setTitle("Выйти из аккаунта", for: .normal)
         logoutButton.setTitleColor(DS.crimson, for: .normal)
@@ -267,9 +268,7 @@ final class ProfileViewController: UIViewController {
             logoutButton.heightAnchor.constraint(equalToConstant: 50),
             logoutButton.bottomAnchor.constraint(equalTo: actionsCard.bottomAnchor, constant: -14),
         ])
-        return   // constraints already set above
-
-        // constraints handled above via return
+        return
     }
 
     private func styleCard(_ view: UIView) {
@@ -304,6 +303,7 @@ final class ProfileViewController: UIViewController {
     }
 }
 
+// MARK: - ProfileViewController Extension
 extension ProfileViewController: ProfileViewInput {
     func showInDevelopmentAlert() {
         let alert = UIAlertController(title: nil, message: "Функция в разработке", preferredStyle: .alert)

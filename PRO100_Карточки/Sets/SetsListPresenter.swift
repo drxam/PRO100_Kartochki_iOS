@@ -3,14 +3,15 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - SetsListPresenter
 final class SetsListPresenter {
     weak var view: SetsListViewInput?
     var router: SetsListRouterProtocol?
     private var sets: [CardSetModel] = []
     private var allCategories: [APICategory] = []
-    /// Имена категорий → id (из `GET /categories` и из полей `category` в ответах наборов).
     private var categoryNameToId: [String: Int] = [:]
     private var selectedCategory = "Все"
     private var searchText = ""
@@ -19,6 +20,7 @@ final class SetsListPresenter {
     private var decksLoadGeneration = 0
 }
 
+// MARK: - SetsListPresenter Extension
 extension SetsListPresenter: SetsListViewOutput {
     func viewDidLoad() {
         categoryNameToId = [:]

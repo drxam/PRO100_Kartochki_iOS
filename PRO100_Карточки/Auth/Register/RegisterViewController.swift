@@ -3,14 +3,17 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - RegisterViewInput
 protocol RegisterViewInput: AnyObject {
     func setLoading(_ isLoading: Bool)
     func showMessage(_ message: String)
     func setPasswordValidation(lengthOK: Bool, lettersDigitsOK: Bool)
 }
 
+// MARK: - RegisterViewOutput
 protocol RegisterViewOutput: AnyObject {
     func viewDidLoad()
     func didTapRegister(email: String, password: String, confirmPassword: String)
@@ -18,24 +21,21 @@ protocol RegisterViewOutput: AnyObject {
     func didChangePassword(_ password: String)
 }
 
+// MARK: - RegisterViewController
 final class RegisterViewController: UIViewController, RegisterViewInput {
     var output: RegisterViewOutput?
 
-    // Background
     private let bgLayer = CAGradientLayer()
     private let orbA    = UIView()
     private let orbB    = UIView()
     private let orbC    = UIView()
 
-    // Scroll (needed: more fields than can fit without keyboard)
     private let scroll  = UIScrollView()
     private let content = UIView()
 
-    // Hero
     private let titleLabel    = UILabel()
     private let subtitleLabel = UILabel()
 
-    // Card
     private let card       = UIView()
     private let blur       = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let cardBorder = CAGradientLayer()
@@ -55,7 +55,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
     private let errorLabel   = UILabel()
     private let spinner      = UIActivityIndicatorView(style: .medium)
 
-    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -75,7 +74,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         layoutCardBorder()
     }
 
-    // MARK: - Background
 
     private func buildBackground() {
         applyAppBackground(to: view, bgLayer: bgLayer, orbA: orbA, orbB: orbB, orbC: orbC)
@@ -84,7 +82,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         view.addGestureRecognizer(tap)
     }
 
-    // MARK: - Scroll
 
     private func buildScroll() {
         scroll.translatesAutoresizingMaskIntoConstraints = false
@@ -96,7 +93,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         scroll.addSubview(content)
     }
 
-    // MARK: - Hero
 
     private func buildHero() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -119,7 +115,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         content.addSubview(subtitleLabel)
     }
 
-    // MARK: - Card
 
     private func buildCard() {
         card.translatesAutoresizingMaskIntoConstraints = false
@@ -139,7 +134,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         content.addSubview(card)
         card.addSubview(blur)
 
-        // Fields
         emailField.translatesAutoresizingMaskIntoConstraints   = false
         passField.translatesAutoresizingMaskIntoConstraints    = false
         confirmField.translatesAutoresizingMaskIntoConstraints = false
@@ -168,13 +162,11 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         card.addSubview(eye2)
         _ = makeEye()
 
-        // Validation rows
         lengthRow.translatesAutoresizingMaskIntoConstraints  = false
         complexRow.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(lengthRow)
         card.addSubview(complexRow)
 
-        // Register button
         registerBtn.translatesAutoresizingMaskIntoConstraints = false
         registerBtn.setTitle("Зарегистрироваться", for: .normal)
         registerBtn.setTitleColor(.white, for: .normal)
@@ -194,7 +186,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         spinner.translatesAutoresizingMaskIntoConstraints = false
         registerBtn.addSubview(spinner)
 
-        // Error
         errorLabel.translatesAutoresizingMaskIntoConstraints = false
         errorLabel.font = .app(13, .semibold)
         errorLabel.textColor = UIColor(red: 1, green: 0.55, blue: 0.55, alpha: 1)
@@ -203,7 +194,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         errorLabel.isHidden = true
         card.addSubview(errorLabel)
 
-        // Divider + login
         divider.translatesAutoresizingMaskIntoConstraints = false
         card.addSubview(divider)
 
@@ -242,7 +232,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         if cardBorder.superlayer == nil { card.layer.addSublayer(cardBorder) }
     }
 
-    // MARK: - Constraints
 
     private func buildConstraints() {
         NSLayoutConstraint.activate([
@@ -331,7 +320,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         ])
     }
 
-    // MARK: - Actions
 
     @objc private func dismissKb()  { view.endEditing(true) }
     @objc private func regTap()     { output?.didTapRegister(email: emailField.value, password: passField.value, confirmPassword: confirmField.value) }
@@ -364,7 +352,6 @@ final class RegisterViewController: UIViewController, RegisterViewInput {
         }
     }
 
-    // MARK: - RegisterViewInput
 
     func setLoading(_ isLoading: Bool) {
         registerBtn.isEnabled = !isLoading

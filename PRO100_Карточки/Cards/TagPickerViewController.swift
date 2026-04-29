@@ -3,9 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
-/// Выбор тега для фильтра: список с прокруткой и поиском (GET /api/tags?search=).
+// MARK: - TagPickerViewController
 final class TagPickerViewController: UIViewController {
     var onPick: ((APITag?) -> Void)?
     var selectedName: String?
@@ -84,6 +85,7 @@ final class TagPickerViewController: UIViewController {
     }
 }
 
+// MARK: - TagPickerViewController Extension
 extension TagPickerViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         searchWorkItem?.cancel()
@@ -100,6 +102,7 @@ extension TagPickerViewController: UISearchBarDelegate {
     }
 }
 
+// MARK: - TagPickerViewController Extension
 extension TagPickerViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int { 2 }
 

@@ -3,13 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - RegisterPresenter
 final class RegisterPresenter {
     weak var view: RegisterViewInput?
     var router: RegisterRouterProtocol?
 }
 
+// MARK: - RegisterPresenter Extension
 extension RegisterPresenter: RegisterViewOutput {
     func viewDidLoad() {
         view?.setPasswordValidation(lengthOK: false, lettersDigitsOK: false)

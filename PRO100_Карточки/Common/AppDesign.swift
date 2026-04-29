@@ -2,40 +2,34 @@
 //  AppDesign.swift
 //  PRO100_Карточки
 //
-//  Shared design tokens & utilities for the whole app.
-//
+
 
 import UIKit
 
-// MARK: - Design System palette
 
+// MARK: - DS
 enum DS {
-    // Background gradient (auth + main screens)
-    static let bgTop     = UIColor(red: 0.04, green: 0.06, blue: 0.18, alpha: 1) // #0A1030
-    static let bgMid     = UIColor(red: 0.05, green: 0.16, blue: 0.46, alpha: 1) // #0D2976
-    static let bgBot     = UIColor(red: 0.16, green: 0.04, blue: 0.07, alpha: 1) // #290A12
+    static let bgTop     = UIColor(red: 0.04, green: 0.06, blue: 0.18, alpha: 1)
+    static let bgMid     = UIColor(red: 0.05, green: 0.16, blue: 0.46, alpha: 1)
+    static let bgBot     = UIColor(red: 0.16, green: 0.04, blue: 0.07, alpha: 1)
 
-    // Accent
-    static let crimson   = UIColor(red: 0.88, green: 0.16, blue: 0.14, alpha: 1) // #E12924
-    static let royal     = UIColor(red: 0.06, green: 0.28, blue: 0.88, alpha: 1) // #0F48E1
+    static let crimson   = UIColor(red: 0.88, green: 0.16, blue: 0.14, alpha: 1)
+    static let royal     = UIColor(red: 0.06, green: 0.28, blue: 0.88, alpha: 1)
 
-    // Glass surfaces
     static let glass     = UIColor.white.withAlphaComponent(0.09)
     static let glassBdr  = UIColor.white.withAlphaComponent(0.18)
     static let surface   = UIColor.white.withAlphaComponent(0.06)
 
-    // Text
     static let textPrim  = UIColor.white
     static let textDim   = UIColor.white.withAlphaComponent(0.55)
     static let textMuted = UIColor.white.withAlphaComponent(0.35)
 
-    // Field
     static let field     = UIColor.white.withAlphaComponent(0.11)
     static let fieldBdr  = UIColor.white.withAlphaComponent(0.28)
 }
 
-// MARK: - Font
 
+// MARK: - UIFont Extension
 extension UIFont {
     static func app(_ size: CGFloat, _ weight: UIFont.Weight) -> UIFont {
         let base = UIFont.systemFont(ofSize: size, weight: weight)
@@ -44,8 +38,8 @@ extension UIFont {
     }
 }
 
-// MARK: - Navigation bar dark styling
 
+// MARK: - UIViewController Extension
 extension UIViewController {
     func applyDarkNavBar() {
         let app = UINavigationBarAppearance()
@@ -67,8 +61,8 @@ extension UIViewController {
     }
 }
 
-// MARK: - Glass card helper
 
+// MARK: - UIView Extension
 extension UIView {
     func applyGlassCard(cornerRadius r: CGFloat = 20) {
         backgroundColor   = DS.glass
@@ -83,9 +77,7 @@ extension UIView {
     }
 }
 
-// MARK: - Dark background gradient + orbs
 
-/// Call in viewDidLoad to paint the full-screen background used by all main screens.
 func applyAppBackground(to view: UIView,
                          bgLayer: CAGradientLayer,
                          orbA: UIView,
@@ -121,8 +113,8 @@ func layoutAppOrbs(_ orbA: UIView, _ orbB: UIView, _ orbC: UIView, in view: UIVi
     place(orbC, cx: w * 0.90, cy: h * 0.88, r: 90)
 }
 
-// MARK: - Tab bar dark styling
 
+// MARK: - UITabBar Extension
 extension UITabBar {
     static func applyDarkStyle() {
         let app = UITabBarAppearance()

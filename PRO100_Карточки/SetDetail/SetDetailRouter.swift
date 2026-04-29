@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - SetDetailRouterProtocol
 protocol SetDetailRouterProtocol: AnyObject {
     func closeAfterDelete()
     func openLearning(set: CardSetModel, cards: [CardModel])
@@ -13,6 +15,7 @@ protocol SetDetailRouterProtocol: AnyObject {
     func openCreateCard(prefilledSetId: String)
 }
 
+// MARK: - SetDetailRouter
 final class SetDetailRouter: SetDetailRouterProtocol {
     weak var viewController: UIViewController?
 

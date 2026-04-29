@@ -3,13 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - LoginPresenter
 final class LoginPresenter {
     weak var view: LoginViewInput?
     var router: LoginRouterProtocol?
 }
 
+// MARK: - LoginPresenter Extension
 extension LoginPresenter: LoginViewOutput {
     func viewDidLoad() {}
 

@@ -2,20 +2,18 @@
 //  StudyContentService.swift
 //  PRO100_Карточки
 //
-//  Ручки: /api/decks, /api/cards, … — поля тел и JSON как в PRO100_Kartochki_Go/internal/domain/dto.go (+ deck.go, card.go, tag.go).
-//
+
 
 import Foundation
 
+// MARK: - StudyContentService
 final class StudyContentService {
     static let shared = StudyContentService()
 
     private init() {}
 
-    // MARK: - Категории / теги (без авторизации на чтение)
 
     func fetchCategories(completion: @escaping (Result<[APICategory], AuthError>) -> Void) {
-        // В cmd/api/main.go: GET /api/categories без JWT (до группы auth).
         let req = Pro100APIClient.get(path: "categories", authorized: false)
         Pro100APIClient.dataTask(req) { result in
             switch result {
@@ -35,7 +33,6 @@ final class StudyContentService {
         }
     }
 
-    /// GET /api/tags — публичный; `search` → query `search` (см. `TagHandler.List` в Go).
     func fetchTags(search: String? = nil, completion: @escaping (Result<[APITag], AuthError>) -> Void) {
         var q: [String: String] = [:]
         if let s = search?.trimmingCharacters(in: .whitespacesAndNewlines), !s.isEmpty {
@@ -60,7 +57,6 @@ final class StudyContentService {
         }
     }
 
-    /// `POST /api/categories` (с JWT) — в Go доступно любому авторизованному пользователю.
     func createCategory(name: String, completion: @escaping (Result<APICategory, AuthError>) -> Void) {
         do {
             let req = try Pro100APIClient.postJSON(path: "categories", body: CreateNamedBody(name: name), authorized: true)
@@ -109,7 +105,6 @@ final class StudyContentService {
         }
     }
 
-    // MARK: - Мои наборы
 
     func listMyDecks(
         page: Int,
@@ -217,7 +212,6 @@ final class StudyContentService {
         }
     }
 
-    // MARK: - Публичные наборы
 
     func listPublicDecks(
         page: Int,
@@ -293,7 +287,6 @@ final class StudyContentService {
         }
     }
 
-    // MARK: - Избранное
 
     func listFavorites(
         page: Int,
@@ -328,7 +321,6 @@ final class StudyContentService {
         }
     }
 
-    // MARK: - Обучение (SM-2 сессии)
 
     func getDeckProgress(deckId: Int, completion: @escaping (Result<DeckProgressDTO, AuthError>) -> Void) {
         let req = Pro100APIClient.get(path: "decks/\(deckId)/progress", authorized: true)
@@ -472,7 +464,6 @@ final class StudyContentService {
         }
     }
 
-    // MARK: - Карточки
 
     func listMyCards(
         page: Int,
@@ -508,7 +499,6 @@ final class StudyContentService {
         }
     }
 
-    /// GET /api/cards/:id — ответ `domain.CardListItem` (как в `GetByIDForAPI` в Go).
     func getMyCard(id: Int, completion: @escaping (Result<CardListItemDTO, AuthError>) -> Void) {
         let req = Pro100APIClient.get(path: "cards/\(id)", authorized: true)
         Pro100APIClient.dataTask(req) { result in
@@ -593,9 +583,7 @@ final class StudyContentService {
         }
     }
 
-    // MARK: - Помощники
 
-    /// Подобрать id тегов по именам; отсутствующие теги создаются (в порядке `names`).
     func resolveTagIds(
         names: [String],
         allTags: [APITag],
@@ -722,7 +710,6 @@ final class StudyContentService {
         return data
     }
 
-    /// Разбор `{"tags":[...]}` без строгого Codable (на случай нестандартного `id` в JSON).
     private static func decodeTagsFromTagsKeyJSON(_ data: Data) -> [APITag]? {
         guard let obj = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else { return nil }
         guard obj.keys.contains("tags") else { return nil }
@@ -759,7 +746,6 @@ final class StudyContentService {
         }
     }
 
-    /// Разные бэкенды отдают список тегов как `{ "tags": [...] }`, как массив или как `{ "data": [...] }`.
     private static func decodeTagsList(_ data: Data) -> [APITag]? {
         let data = trimJSONBOM(data)
         if data.isEmpty { return [] }
@@ -790,7 +776,6 @@ final class StudyContentService {
         return nil
     }
 
-    // MARK: - Ослабленный разбор JSON (чужие ключи/вложенность)
 
     private static func intFromJSONValue(_ v: Any?) -> Int? {
         switch v {
@@ -868,8 +853,8 @@ final class StudyContentService {
     }
 }
 
-// MARK: - DTO (сверено с PRO100_Kartochki_Go: internal/domain/dto.go, deck.go, card.go, tag.go)
 
+// MARK: - APICategory
 struct APICategory: Decodable, Hashable {
     let id: Int
     let name: String
@@ -896,6 +881,7 @@ struct APICategory: Decodable, Hashable {
     }
 }
 
+// MARK: - APITag
 struct APITag: Decodable, Hashable {
     let id: Int
     let name: String
@@ -926,6 +912,7 @@ private struct CreateNamedBody: Encodable {
     let name: String
 }
 
+// MARK: - CategoriesResponse
 struct CategoriesResponse: Decodable {
     let categories: [APICategory]
 
@@ -937,6 +924,7 @@ struct CategoriesResponse: Decodable {
     private enum CodingKeys: String, CodingKey { case categories }
 }
 
+// MARK: - TagsResponse
 struct TagsResponse: Decodable {
     let tags: [APITag]
 
@@ -948,22 +936,26 @@ struct TagsResponse: Decodable {
     private enum CodingKeys: String, CodingKey { case tags }
 }
 
+// MARK: - DecksListResponse
 struct DecksListResponse: Decodable {
     let decks: [DeckListItemDTO]
     let pagination: PaginationDTO
 }
 
+// MARK: - PublicDecksListResponse
 struct PublicDecksListResponse: Decodable {
     let decks: [PublicDeckListItemDTO]
     let pagination: PaginationDTO
 }
 
+// MARK: - PaginationDTO
 struct PaginationDTO: Decodable {
     let page: Int
     let limit: Int
     let total: Int
 }
 
+// MARK: - DeckListItemDTO
 struct DeckListItemDTO: Decodable {
     let id: Int
     let title: String
@@ -975,6 +967,7 @@ struct DeckListItemDTO: Decodable {
     let createdAt: String?
 }
 
+// MARK: - DeckFullDTO
 struct DeckFullDTO: Decodable {
     let id: Int
     let title: String
@@ -986,6 +979,7 @@ struct DeckFullDTO: Decodable {
     let cardsCount: Int?
 }
 
+// MARK: - CardInDeckDTO
 struct CardInDeckDTO: Decodable {
     let id: Int
     let question: String
@@ -994,6 +988,7 @@ struct CardInDeckDTO: Decodable {
     let tags: [APITag]?
 }
 
+// MARK: - PublicDeckListItemDTO
 struct PublicDeckListItemDTO: Decodable {
     let id: Int
     let title: String
@@ -1005,12 +1000,14 @@ struct PublicDeckListItemDTO: Decodable {
     let createdAt: String
 }
 
+// MARK: - DeckAuthorDTO
 struct DeckAuthorDTO: Decodable {
     let id: Int
     let username: String?
     let avatarUrl: String?
 }
 
+// MARK: - PublicDeckDetailDTO
 struct PublicDeckDetailDTO: Decodable {
     let id: Int
     let title: String
@@ -1022,17 +1019,20 @@ struct PublicDeckDetailDTO: Decodable {
     let cards: [PublicCardItemDTO]
 }
 
+// MARK: - PublicCardItemDTO
 struct PublicCardItemDTO: Decodable {
     let id: Int
     let question: String
     let answer: String
 }
 
+// MARK: - CardsListResponse
 struct CardsListResponse: Decodable {
     let cards: [CardListItemDTO]
     let pagination: PaginationDTO
 }
 
+// MARK: - CardListItemDTO
 struct CardListItemDTO: Decodable {
     let id: Int
     let question: String
@@ -1043,11 +1043,13 @@ struct CardListItemDTO: Decodable {
     let createdAt: String?
 }
 
+// MARK: - DeckBriefDTO
 struct DeckBriefDTO: Decodable {
     let id: Int
     let title: String
 }
 
+// MARK: - CardItemDTO
 struct CardItemDTO: Decodable {
     let id: Int
     let question: String
@@ -1074,7 +1076,6 @@ private struct UpdateDeckBody: Encodable {
     let tagIds: [Int]?
 }
 
-/// Тело для `POST /decks/:id/cards` (deck_id в пути, в теле не дублируем).
 private struct CreateCardInDeckBody: Encodable {
     let question: String
     let answer: String
@@ -1096,12 +1097,14 @@ private struct ReviewStudyCardBody: Encodable {
     let quality: Int
 }
 
+// MARK: - FavoriteResponseDTO
 struct FavoriteResponseDTO: Decodable {
     let deckId: Int
     let isFavorite: Bool
     let message: String
 }
 
+// MARK: - DeckProgressDTO
 struct DeckProgressDTO: Decodable {
     let deckId: Int
     let cardsTotal: Int
@@ -1110,6 +1113,7 @@ struct DeckProgressDTO: Decodable {
     let cardsMastered: Int
 }
 
+// MARK: - StudyCardDTO
 struct StudyCardDTO: Decodable {
     let id: Int
     let question: String
@@ -1117,6 +1121,7 @@ struct StudyCardDTO: Decodable {
     let isNew: Bool?
 }
 
+// MARK: - StartStudyResponseDTO
 struct StartStudyResponseDTO: Decodable {
     let sessionId: Int?
     let card: StudyCardDTO?
@@ -1125,12 +1130,14 @@ struct StartStudyResponseDTO: Decodable {
     let message: String?
 }
 
+// MARK: - ReviewStudyResponseDTO
 struct ReviewStudyResponseDTO: Decodable {
     let nextCard: StudyCardDTO?
     let summary: StudySessionSummaryDTO?
     let progress: CardProgressDTO?
 }
 
+// MARK: - StudySessionSummaryDTO
 struct StudySessionSummaryDTO: Decodable {
     let sessionId: Int
     let cardsReviewed: Int
@@ -1139,6 +1146,7 @@ struct StudySessionSummaryDTO: Decodable {
     let duration: String
 }
 
+// MARK: - CardProgressDTO
 struct CardProgressDTO: Decodable {
     let cardId: Int
     let status: String?
@@ -1148,6 +1156,7 @@ struct CardProgressDTO: Decodable {
     let nextReviewAt: String
 }
 
+// MARK: - StudySessionDTO
 struct StudySessionDTO: Decodable {
     let id: Int
     let deckId: Int
@@ -1159,17 +1168,19 @@ struct StudySessionDTO: Decodable {
     let endedAt: String?
 }
 
+// MARK: - StudySessionsListResponseDTO
 struct StudySessionsListResponseDTO: Decodable {
     let sessions: [StudySessionDTO]
 }
 
+// MARK: - FinishStudyResponseDTO
 struct FinishStudyResponseDTO: Decodable {
     let session: StudySessionDTO
     let summary: StudySessionSummaryDTO
 }
 
-// MARK: - Модели UI
 
+// MARK: - StudyContentMappers
 enum StudyContentMappers {
     static func cardSet(from item: DeckListItemDTO) -> CardSetModel {
         CardSetModel(

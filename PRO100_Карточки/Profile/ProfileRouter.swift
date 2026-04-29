@@ -3,13 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - ProfileRouterProtocol
 protocol ProfileRouterProtocol: AnyObject {
     func logout()
     func openEditProfile(_ profile: UserProfileModel)
 }
 
+// MARK: - ProfileRouter
 final class ProfileRouter: ProfileRouterProtocol {
     weak var viewController: UIViewController?
     private let appAssembly = AppAssembly()

@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - ProfileAssembly
 final class ProfileAssembly {
     func makeModule() -> UIViewController {
         let vc = ProfileViewController()

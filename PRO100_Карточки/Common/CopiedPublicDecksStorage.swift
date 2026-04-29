@@ -1,5 +1,11 @@
+//
+//  CopiedPublicDecksStorage.swift
+//  PRO100_Карточки
+//
+
 import Foundation
 
+// MARK: - CopiedPublicDecksStorage
 enum CopiedPublicDecksStorage {
     private static let key = "copied_public_deck_ids"
 

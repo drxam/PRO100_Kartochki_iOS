@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - CardsListViewInput
 protocol CardsListViewInput: AnyObject {
     func showInDevelopmentAlert()
     func reloadData()
@@ -14,6 +16,7 @@ protocol CardsListViewInput: AnyObject {
     func showErrorToast(_ message: String)
 }
 
+// MARK: - CardsListViewOutput
 protocol CardsListViewOutput: AnyObject {
     func viewDidLoad()
     func viewWillAppear()
@@ -29,6 +32,7 @@ protocol CardsListViewOutput: AnyObject {
     func card(at index: Int) -> CardModel
 }
 
+// MARK: - CardsListViewController
 final class CardsListViewController: UIViewController {
     var output: CardsListViewOutput?
 
@@ -192,6 +196,7 @@ final class CardsListViewController: UIViewController {
     }
 }
 
+// MARK: - CardsListViewController Extension
 extension CardsListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         output?.numberOfCards() ?? 0
@@ -223,6 +228,7 @@ extension CardsListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - CardsListViewController Extension
 extension CardsListViewController: CardsListViewInput {
     func showInDevelopmentAlert() {
         let alert = UIAlertController(title: nil, message: "Функция в разработке", preferredStyle: .alert)
@@ -292,6 +298,7 @@ extension CardsListViewController: CardsListViewInput {
     }
 }
 
+// MARK: - CardsListViewController Extension
 extension CardsListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         output?.didSearch(text: searchText)

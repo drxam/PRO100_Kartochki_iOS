@@ -3,13 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - RegisterRouterProtocol
 protocol RegisterRouterProtocol: AnyObject {
     func openMain()
     func closeToLogin()
 }
 
+// MARK: - RegisterRouter
 final class RegisterRouter: RegisterRouterProtocol {
     weak var viewController: UIViewController?
     private let assembly = AppAssembly()

@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - ProfilePresenter
 final class ProfilePresenter {
     weak var view: ProfileViewInput?
     var router: ProfileRouterProtocol?
@@ -19,6 +21,7 @@ final class ProfilePresenter {
     )
 }
 
+// MARK: - ProfilePresenter Extension
 extension ProfilePresenter: ProfileViewOutput {
     func viewDidLoad() {
         view?.configure(profile: profile)

@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - CardsListPresenter
 final class CardsListPresenter {
     weak var view: CardsListViewInput?
     var router: CardsListRouterProtocol?
@@ -17,15 +19,13 @@ final class CardsListPresenter {
     private var selectedTag: String?
     private var searchText = ""
     private var lastPagination: PaginationDTO?
-    /// Параллельные запросы (сброс + первая страница): считаем, чтобы completion «старого» запроса не залипал в `isLoading == true`.
     private var activeListRequests = 0
     private var isListLoading: Bool { activeListRequests > 0 }
-    /// Смена фильтра во время уже идущей загрузки — ответы с устаревшим поколением не трогают список.
     private var cardsLoadGeneration = 0
-    /// `viewDidLoad` уже делает первую загрузку; без этого `viewWillAppear` дублирует запрос и поднимает поколение лишний раз.
     private var hasSkippedFirstWillAppear = false
 }
 
+// MARK: - CardsListPresenter Extension
 extension CardsListPresenter: CardsListViewOutput {
     func viewDidLoad() {
         categoryNameToId = [:]
@@ -105,7 +105,6 @@ extension CardsListPresenter: CardsListViewOutput {
         refreshCategoryChips()
     }
 
-    /// Теги с id из ответа списка карточек — чтобы фильтр работал, даже если `GET /tags` недоступен или в другом формате.
     private func mergeTagsFromCards(_ items: [CardListItemDTO]) {
         for item in items {
             for t in item.tags ?? [] {

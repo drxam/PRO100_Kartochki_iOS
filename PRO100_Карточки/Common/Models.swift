@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - CardSetModel
 struct CardSetModel {
     let id: String
     let title: String
@@ -16,6 +18,7 @@ struct CardSetModel {
     let cards: [CardModel]
 }
 
+// MARK: - CardModel
 struct CardModel {
     let id: String
     let question: String
@@ -26,18 +29,19 @@ struct CardModel {
     let tags: [String]
 }
 
+// MARK: - PublicSetModel
 struct PublicSetModel {
     let id: String
     let title: String
     let cardCount: Int
     let category: String
     let authorName: String
-    /// URL аватара автора с бэка (`author.avatar_url`), если есть.
     let authorAvatarURL: String?
     let popularity: Int
     let createdAt: Date
 }
 
+// MARK: - UserProfileModel
 struct UserProfileModel {
     let name: String
     let email: String
@@ -45,5 +49,5 @@ struct UserProfileModel {
     let registeredAt: String
     let setsCount: Int
     let cardsCount: Int
-    let learningProgress: Int // 0-100
+    let learningProgress: Int
 }

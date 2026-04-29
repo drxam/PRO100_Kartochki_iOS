@@ -3,13 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - SetEditorMode
 enum SetEditorMode {
     case create
     case edit(CardSetModel)
 }
 
+// MARK: - SetEditorAssembly
 final class SetEditorAssembly {
     func makeModule(mode: SetEditorMode) -> UIViewController {
         let vc = SetEditorViewController()

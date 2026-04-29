@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - PublicListAssembly
 final class PublicListAssembly {
     func makeModule() -> UIViewController {
         let vc = PublicListViewController()

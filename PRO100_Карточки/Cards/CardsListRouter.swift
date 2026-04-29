@@ -3,13 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - CardsListRouterProtocol
 protocol CardsListRouterProtocol: AnyObject {
     func openCardDetail(cards: [CardModel], selectedIndex: Int)
     func openCreateCard()
 }
 
+// MARK: - CardsListRouter
 final class CardsListRouter: CardsListRouterProtocol {
     weak var viewController: UIViewController?
 

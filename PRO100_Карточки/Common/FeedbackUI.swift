@@ -1,5 +1,11 @@
+//
+//  FeedbackUI.swift
+//  PRO100_Карточки
+//
+
 import UIKit
 
+// MARK: - UIViewController Extension
 extension UIViewController {
     func showToast(_ message: String) {
         let label = UILabel()

@@ -3,14 +3,17 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - LoginRouterProtocol
 protocol LoginRouterProtocol: AnyObject {
     func openMain()
     func openRegister()
     func openForgotPassword()
 }
 
+// MARK: - LoginRouter
 final class LoginRouter: LoginRouterProtocol {
     weak var viewController: UIViewController?
     private let assembly: AppAssembly

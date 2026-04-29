@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - CardEditorViewController
 final class CardEditorViewController: UIViewController {
     var output: CardEditorViewOutput?
 
@@ -33,7 +35,6 @@ final class CardEditorViewController: UIViewController {
 
     private var setIds: [String] = []
     private var tags: [String] = []
-    /// Если задан — карточка сохраняется только в этот набор, сегмент выбора набора скрыт.
     private var lockedSetId: String?
 
     private var tagInputTopBelowSetConstraint: NSLayoutConstraint!
@@ -374,6 +375,7 @@ final class CardEditorViewController: UIViewController {
     }
 }
 
+// MARK: - CardEditorViewController Extension
 extension CardEditorViewController: CardEditorViewInput {
     func configure(
         title: String,
@@ -458,6 +460,7 @@ extension CardEditorViewController: CardEditorViewInput {
     }
 }
 
+// MARK: - CardEditorViewController Extension
 extension CardEditorViewController: UITextFieldDelegate {
     func textFieldDidBeginEditing(_ textField: UITextField) {
         guard textField == tagInput else { return }
@@ -480,6 +483,7 @@ extension CardEditorViewController: UITextFieldDelegate {
     }
 }
 
+// MARK: - CardEditorViewController Extension
 extension CardEditorViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.textColor == .secondaryLabel {

@@ -1,6 +1,12 @@
+//
+//  ProfileEditViewController.swift
+//  PRO100_Карточки
+//
+
 import UIKit
 import PhotosUI
 
+// MARK: - ProfileEditViewController
 final class ProfileEditViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     private var profile: UserProfileModel
     private let avatarView = UIImageView()

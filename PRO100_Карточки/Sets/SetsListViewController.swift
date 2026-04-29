@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - SetsListViewInput
 protocol SetsListViewInput: AnyObject {
     func showInDevelopmentAlert()
     func showDeleteConfirmAlert(setTitle: String, onConfirm: @escaping () -> Void)
@@ -14,6 +16,7 @@ protocol SetsListViewInput: AnyObject {
     func showErrorToast(_ message: String)
 }
 
+// MARK: - SetsListViewOutput
 protocol SetsListViewOutput: AnyObject {
     func viewDidLoad()
     func viewWillAppear()
@@ -27,6 +30,7 @@ protocol SetsListViewOutput: AnyObject {
     func set(at index: Int) -> CardSetModel
 }
 
+// MARK: - SetsListViewController
 final class SetsListViewController: UIViewController {
     var output: SetsListViewOutput?
 
@@ -167,6 +171,7 @@ final class SetsListViewController: UIViewController {
     }
 }
 
+// MARK: - SetsListViewController Extension
 extension SetsListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         output?.numberOfSets() ?? 0
@@ -199,6 +204,7 @@ extension SetsListViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - SetsListViewController Extension
 extension SetsListViewController: SetsListViewInput {
     func showInDevelopmentAlert() {
         let alert = UIAlertController(title: nil, message: "Функция в разработке", preferredStyle: .alert)
@@ -259,6 +265,7 @@ extension SetsListViewController: SetsListViewInput {
     }
 }
 
+// MARK: - SetsListViewController Extension
 extension SetsListViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         output?.didSearch(text: searchText)

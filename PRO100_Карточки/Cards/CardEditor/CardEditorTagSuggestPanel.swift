@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - CardEditorTagSuggestPanel
 final class CardEditorTagSuggestPanel: UIView {
     var onPick: ((String) -> Void)?
     var tagsAlreadyOnCard: () -> [String] = { [] }
@@ -105,6 +107,7 @@ final class CardEditorTagSuggestPanel: UIView {
     }
 }
 
+// MARK: - CardEditorTagSuggestPanel Extension
 extension CardEditorTagSuggestPanel: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         rowCount()

@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - LearningPresenter
 final class LearningPresenter {
     weak var view: LearningViewInput?
     var router: LearningRouterProtocol?
@@ -29,6 +31,7 @@ final class LearningPresenter {
     }
 }
 
+// MARK: - LearningPresenter Extension
 extension LearningPresenter: LearningViewOutput {
     func viewDidLoad() {
         startServerSessionIfPossible()

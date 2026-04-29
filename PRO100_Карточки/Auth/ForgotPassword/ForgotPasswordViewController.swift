@@ -3,33 +3,34 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - ForgotPasswordViewInput
 protocol ForgotPasswordViewInput: AnyObject {
     func setLoading(_ isLoading: Bool)
     func showStatusMessage(_ message: String, isError: Bool)
 }
 
+// MARK: - ForgotPasswordViewOutput
 protocol ForgotPasswordViewOutput: AnyObject {
     func viewDidLoad()
     func didTapSend(email: String)
     func didTapBackToLogin()
 }
 
+// MARK: - ForgotPasswordViewController
 final class ForgotPasswordViewController: UIViewController {
     var output: ForgotPasswordViewOutput?
 
-    // Background
     private let bgLayer = CAGradientLayer()
     private let orbA    = UIView()
     private let orbB    = UIView()
     private let orbC    = UIView()
 
-    // Hero
     private let titleLabel    = UILabel()
     private let subtitleLabel = UILabel()
 
-    // Card
     private let card    = UIView()
     private let blur    = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let cardBorder = CAGradientLayer()
@@ -39,10 +40,8 @@ final class ForgotPasswordViewController: UIViewController {
     private let backBtn     = UIButton(type: .system)
     private let spinner     = UIActivityIndicatorView(style: .medium)
 
-    // Keyboard
     private var cardRestCenterY: CGFloat = 0
 
-    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,7 +66,6 @@ final class ForgotPasswordViewController: UIViewController {
         layoutCardBorder()
     }
 
-    // MARK: - Background
 
     private func buildBackground() {
         applyAppBackground(to: view, bgLayer: bgLayer, orbA: orbA, orbB: orbB, orbC: orbC)
@@ -76,7 +74,6 @@ final class ForgotPasswordViewController: UIViewController {
         view.addGestureRecognizer(tap)
     }
 
-    // MARK: - Hero
 
     private func buildHero() {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -99,7 +96,6 @@ final class ForgotPasswordViewController: UIViewController {
         view.addSubview(subtitleLabel)
     }
 
-    // MARK: - Card
 
     private func buildCard() {
         let (c, b) = makeAuthCard()
@@ -186,7 +182,6 @@ final class ForgotPasswordViewController: UIViewController {
         if cardBorder.superlayer == nil { card.layer.addSublayer(cardBorder) }
     }
 
-    // MARK: - Constraints
 
     private func buildConstraints() {
         NSLayoutConstraint.activate([
@@ -231,7 +226,6 @@ final class ForgotPasswordViewController: UIViewController {
         ])
     }
 
-    // MARK: - Keyboard
 
     private func setupKeyboard() {
         NotificationCenter.default.addObserver(self, selector: #selector(kbShow(_:)),
@@ -271,7 +265,6 @@ final class ForgotPasswordViewController: UIViewController {
         }
     }
 
-    // MARK: - Actions
 
     @objc private func sendTap()  { output?.didTapSend(email: emailField.value) }
     @objc private func backTap()  { output?.didTapBackToLogin() }
@@ -291,8 +284,8 @@ final class ForgotPasswordViewController: UIViewController {
     }
 }
 
-// MARK: - ForgotPasswordViewInput
 
+// MARK: - ForgotPasswordViewController Extension
 extension ForgotPasswordViewController: ForgotPasswordViewInput {
     func setLoading(_ isLoading: Bool) {
         sendBtn.isEnabled = !isLoading

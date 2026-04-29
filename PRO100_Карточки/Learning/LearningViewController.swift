@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - LearningViewInput
 protocol LearningViewInput: AnyObject {
     func showCompletion(total: Int)
     func hideCompletion()
@@ -13,6 +15,7 @@ protocol LearningViewInput: AnyObject {
     func showErrorBanner(_ message: String)
 }
 
+// MARK: - LearningViewOutput
 protocol LearningViewOutput: AnyObject {
     func viewDidLoad()
     func didTapClose()
@@ -22,7 +25,6 @@ protocol LearningViewOutput: AnyObject {
     func didTapNext()
     func didTapRestartLearning()
     func didTapBackToCardsFromCompletion()
-    /// Закрыть обучение и вернуться к экрану, с которого зашли (наборы / деталь набора).
     func didTapBackToSetsFromCompletion()
     func currentProgress() -> (current: Int, total: Int)
     func currentCardQuestion() -> String
@@ -30,12 +32,14 @@ protocol LearningViewOutput: AnyObject {
     func isAnswerShown() -> Bool
 }
 
+// MARK: - LearningRating
 enum LearningRating {
-    case hard    // Не помню - красная
-    case medium  // Сложно - жёлтая
-    case easy    // Легко - зелёная
+    case hard
+    case medium
+    case easy
 }
 
+// MARK: - LearningViewController
 final class LearningViewController: UIViewController, LearningViewInput {
     var output: LearningViewOutput?
 
@@ -69,7 +73,6 @@ final class LearningViewController: UIViewController, LearningViewInput {
     private func setupUI() {
         view.backgroundColor = DS.bgTop
 
-        // Subtle background gradient for learning screen
         let bgGrad = CAGradientLayer()
         bgGrad.colors = [DS.bgTop.cgColor, DS.bgMid.cgColor, DS.bgBot.cgColor]
         bgGrad.locations = [0, 0.55, 1]
@@ -216,7 +219,6 @@ final class LearningViewController: UIViewController, LearningViewInput {
         completionOverlay.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(completionOverlay)
 
-        // Overlay gradient
         let overlayGrad = CAGradientLayer()
         overlayGrad.colors  = [DS.bgTop.cgColor, DS.bgMid.cgColor]
         overlayGrad.frame   = UIScreen.main.bounds

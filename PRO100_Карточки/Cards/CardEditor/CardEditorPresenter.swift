@@ -3,12 +3,11 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - CardEditorViewInput
 protocol CardEditorViewInput: AnyObject {
-    /// `lockedSetId`: при создании из набора — набор фиксирован.
-    /// `usesDeckCategory`: категория карточки = у набора (как на бэке можно задать отдельно, но UX так проще).
-    /// `categoryPickTitles`: «Без категории» + имена из API; игнорируется если `usesDeckCategory`.
     func configure(
         title: String,
         saveTitle: String,
@@ -22,22 +21,24 @@ protocol CardEditorViewInput: AnyObject {
     func setLoading(_ isLoading: Bool)
 }
 
+// MARK: - CardEditorViewOutput
 protocol CardEditorViewOutput: AnyObject {
     func viewDidLoad()
     func didTapSave(draft: CardEditorDraft)
     func didTapCancel()
 }
 
+// MARK: - CardEditorDraft
 struct CardEditorDraft {
     let question: String
     let answer: String
     let category: String
     let tags: [String]
     let setId: String?
-    /// Если задан — в API уходит этот `category_id` (например, совпадает с набором).
     let resolvedCategoryId: Int?
 }
 
+// MARK: - CardEditorPresenter
 final class CardEditorPresenter {
     weak var view: CardEditorViewInput?
     var router: CardEditorRouterProtocol?
@@ -48,6 +49,7 @@ final class CardEditorPresenter {
     }
 }
 
+// MARK: - CardEditorPresenter Extension
 extension CardEditorPresenter: CardEditorViewOutput {
     func viewDidLoad() {
         switch mode {

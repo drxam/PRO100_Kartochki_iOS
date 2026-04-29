@@ -1,5 +1,11 @@
+//
+//  UserService.swift
+//  PRO100_Карточки
+//
+
 import Foundation
 
+// MARK: - UserService
 final class UserService {
     static let shared = UserService()
 

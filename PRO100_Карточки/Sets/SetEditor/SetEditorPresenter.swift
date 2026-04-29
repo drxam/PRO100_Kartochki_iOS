@@ -3,24 +3,26 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - SetEditorViewInput
 protocol SetEditorViewInput: AnyObject {
-    /// `categoryPickTitles`: первый пункт — «Без категории», далее имена из `GET /categories`.
     func configure(title: String, saveTitle: String, draft: SetEditorDraft, categoryPickTitles: [String])
     func refreshCategoryChips(titles: [String], selectedCategory: String)
     func showError(_ message: String)
     func setLoading(_ isLoading: Bool)
 }
 
+// MARK: - SetEditorViewOutput
 protocol SetEditorViewOutput: AnyObject {
     func viewDidLoad()
     func didTapSave(draft: SetEditorDraft)
     func didTapCancel()
-    /// Создание категории на сервере (`POST /api/categories`), затем обновление чипов.
     func didSubmitNewCategory(name: String)
 }
 
+// MARK: - SetEditorDraft
 struct SetEditorDraft {
     let title: String
     let description: String
@@ -29,6 +31,7 @@ struct SetEditorDraft {
     let isPrivate: Bool
 }
 
+// MARK: - SetEditorPresenter
 final class SetEditorPresenter {
     weak var view: SetEditorViewInput?
     var router: SetEditorRouterProtocol?
@@ -39,6 +42,7 @@ final class SetEditorPresenter {
     }
 }
 
+// MARK: - SetEditorPresenter Extension
 extension SetEditorPresenter: SetEditorViewOutput {
     func viewDidLoad() {
         StudyContentService.shared.fetchCategories { [weak self] result in

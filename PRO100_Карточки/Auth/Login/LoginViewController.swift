@@ -3,13 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - LoginViewInput
 protocol LoginViewInput: AnyObject {
     func setLoading(_ isLoading: Bool)
     func showMessage(_ message: String)
 }
 
+// MARK: - LoginViewOutput
 protocol LoginViewOutput: AnyObject {
     func viewDidLoad()
     func didTapLogin(email: String, password: String)
@@ -17,46 +20,38 @@ protocol LoginViewOutput: AnyObject {
     func didTapRegister()
 }
 
-// MARK: - LoginViewController
 
+// MARK: - LoginViewController
 final class LoginViewController: UIViewController {
     var output: LoginViewOutput?
 
-    // Background
     private let bgLayer       = CAGradientLayer()
-    private let orbA          = UIView() // top-right white
-    private let orbB          = UIView() // mid-left blue
-    private let orbC          = UIView() // bottom-right crimson
+    private let orbA          = UIView()
+    private let orbB          = UIView()
+    private let orbC          = UIView()
     private let rings         = CAShapeLayer()
 
-    // Hero
     private let logoLabel     = UILabel()
     private let taglineLabel  = UILabel()
 
-    // Card
     private let card          = UIView()
     private let cardBlur      = UIVisualEffectView(effect: UIBlurEffect(style: .systemUltraThinMaterialDark))
     private let cardBorder    = CAGradientLayer()
 
-    // Fields
     private let emailField    = AuthFieldRow(icon: "envelope.fill", placeholder: "Электронная почта")
     private let passField     = AuthFieldRow(icon: "lock.fill", placeholder: "Пароль", secure: true)
     private let eyeBtn        = UIButton(type: .system)
 
-    // Buttons
     private let loginBtn      = GradientButton()
     private let divider       = AuthDivider()
     private let registerBtn   = UIButton(type: .system)
     private let forgotBtn     = UIButton(type: .system)
 
-    // Feedback
     private let errorLabel    = UILabel()
     private let spinner       = UIActivityIndicatorView(style: .medium)
 
-    // Keyboard animation
     private var cardRestCenterY: CGFloat = 0
 
-    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -70,7 +65,6 @@ final class LoginViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        // Сохраняем позицию один раз, когда клавиатуры точно нет
         if cardRestCenterY == 0 {
             cardRestCenterY = card.center.y
         }
@@ -84,7 +78,6 @@ final class LoginViewController: UIViewController {
         layoutCardGradBorder()
     }
 
-    // MARK: - Background
 
     private func buildBackground() {
         bgLayer.colors   = [DS.bgTop.cgColor, DS.bgMid.cgColor, DS.bgBot.cgColor]
@@ -136,7 +129,6 @@ final class LoginViewController: UIViewController {
         rings.path = path.cgPath
     }
 
-    // MARK: - Hero
 
     private func buildHero() {
         logoLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -192,7 +184,6 @@ final class LoginViewController: UIViewController {
         let safeTop     = view.safeAreaInsets.top
         let available   = kbTop - safeTop
         let idealTop    = safeTop + (available - card.bounds.height) / 2
-        // cardRestCenterY — позиция без клавиатуры, зафиксированная в viewDidAppear
         let originalTop = cardRestCenterY - card.bounds.height / 2
         let offset      = originalTop - idealTop
 
@@ -222,7 +213,6 @@ final class LoginViewController: UIViewController {
         }
     }
 
-    // MARK: - Card
 
     private func buildCard() {
         card.translatesAutoresizingMaskIntoConstraints = false
@@ -343,7 +333,6 @@ final class LoginViewController: UIViewController {
         card.addSubview(errorLabel)
     }
 
-    // MARK: - Constraints
 
     private func buildConstraints() {
         NSLayoutConstraint.activate([
@@ -407,7 +396,6 @@ final class LoginViewController: UIViewController {
         ])
     }
 
-    // MARK: - Actions
 
     @objc private func loginTap() {
         output?.didTapLogin(email: emailField.value, password: passField.value)
@@ -439,8 +427,8 @@ final class LoginViewController: UIViewController {
     }
 }
 
-// MARK: - LoginViewInput
 
+// MARK: - LoginViewController Extension
 extension LoginViewController: LoginViewInput {
     func setLoading(_ isLoading: Bool) {
         loginBtn.isEnabled    = !isLoading

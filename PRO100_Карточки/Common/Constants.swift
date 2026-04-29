@@ -3,12 +3,15 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - AppConstants
 enum AppConstants {
-    static let accentColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1) // #007AFF
+    static let accentColor = UIColor(red: 0, green: 0.478, blue: 1, alpha: 1)
 }
 
+// MARK: - ValidationRules
 enum ValidationRules {
     static let minPasswordLength = 8
 

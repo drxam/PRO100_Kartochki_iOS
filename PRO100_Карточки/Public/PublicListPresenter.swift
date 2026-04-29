@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - PublicListPresenter
 final class PublicListPresenter {
     weak var view: PublicListViewInput?
     var router: PublicListRouterProtocol?
@@ -20,6 +22,7 @@ final class PublicListPresenter {
     private var publicDecksLoadGeneration = 0
 }
 
+// MARK: - PublicListPresenter Extension
 extension PublicListPresenter: PublicListViewOutput {
     func viewDidLoad() {
         StudyContentService.shared.fetchCategories { [weak self] result in

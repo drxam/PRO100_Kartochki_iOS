@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - AuthError
 enum AuthError: LocalizedError {
     case invalidCredentials
     case emailAlreadyExists
@@ -34,6 +36,7 @@ enum AuthError: LocalizedError {
     }
 }
 
+// MARK: - AuthStorage
 final class AuthStorage {
     static let shared = AuthStorage()
     private let accessTokenKey = "auth_access_token"
@@ -66,6 +69,7 @@ final class AuthStorage {
     }
 }
 
+// MARK: - AuthService
 final class AuthService {
     static let shared = AuthService()
     private let session = URLSession.shared
@@ -121,7 +125,6 @@ final class AuthService {
         }
     }
 
-    /// Пара новых access/refresh с `POST /api/auth/refresh` (без `Authorization` — в теле `refresh_token`).
     func refreshTokens(completion: @escaping (Result<Void, AuthError>) -> Void) {
         guard let refresh = AuthStorage.shared.refreshToken, !refresh.isEmpty else {
             completion(.failure(.unauthorized))
@@ -217,6 +220,7 @@ final class AuthService {
     }
 }
 
+// MARK: - APIErrorEnvelope
 struct APIErrorEnvelope: Decodable {
     struct APIErrorPayload: Decodable {
         let code: String
@@ -225,6 +229,7 @@ struct APIErrorEnvelope: Decodable {
     let error: APIErrorPayload
 }
 
+// MARK: - TokenPairResponse
 struct TokenPairResponse: Decodable {
     let accessToken: String
     let refreshToken: String
@@ -235,6 +240,7 @@ struct TokenPairResponse: Decodable {
     }
 }
 
+// MARK: - OptionalTokenPairResponse
 struct OptionalTokenPairResponse: Decodable {
     let accessToken: String?
     let refreshToken: String?
@@ -245,6 +251,7 @@ struct OptionalTokenPairResponse: Decodable {
     }
 }
 
+// MARK: - EmptyResponse
 struct EmptyResponse: Decodable {
     init() {}
 }

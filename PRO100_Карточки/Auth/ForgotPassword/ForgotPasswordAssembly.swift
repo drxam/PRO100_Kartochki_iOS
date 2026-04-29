@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - ForgotPasswordAssembly
 final class ForgotPasswordAssembly {
     func makeModule() -> UIViewController {
         let viewController = ForgotPasswordViewController()

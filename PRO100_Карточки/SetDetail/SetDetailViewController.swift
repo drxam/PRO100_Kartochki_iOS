@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - SetDetailViewInput
 protocol SetDetailViewInput: AnyObject {
     func showInDevelopmentAlert()
     func showDeleteConfirmAlert(onConfirm: @escaping () -> Void)
@@ -15,6 +17,7 @@ protocol SetDetailViewInput: AnyObject {
     func setFavoriteState(_ isFavorite: Bool)
 }
 
+// MARK: - SetDetailViewOutput
 protocol SetDetailViewOutput: AnyObject {
     func viewDidLoad()
     func viewWillAppear()
@@ -31,6 +34,7 @@ protocol SetDetailViewOutput: AnyObject {
     func isPublicCatalogMode() -> Bool
 }
 
+// MARK: - SetDetailViewController
 final class SetDetailViewController: UIViewController {
     var output: SetDetailViewOutput?
     var isEditable = true
@@ -301,6 +305,7 @@ final class SetDetailViewController: UIViewController {
     @objc private func favoriteTapped() { output?.didTapToggleFavorite() }
 }
 
+// MARK: - SetDetailViewController Extension
 extension SetDetailViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         output?.numberOfCards() ?? 0
@@ -319,6 +324,7 @@ extension SetDetailViewController: UITableViewDelegate, UITableViewDataSource {
     }
 }
 
+// MARK: - SetDetailViewController Extension
 extension SetDetailViewController: SetDetailViewInput {
     func showInDevelopmentAlert() {
         let alert = UIAlertController(title: nil, message: "Функция в разработке", preferredStyle: .alert)

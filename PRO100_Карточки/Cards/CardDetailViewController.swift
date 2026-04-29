@@ -3,8 +3,10 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - CardDetailViewController
 final class CardDetailViewController: UIViewController {
     private var cards: [CardModel]
     private var selectedIndex: Int

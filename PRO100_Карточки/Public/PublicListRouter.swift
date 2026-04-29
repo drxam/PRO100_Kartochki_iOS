@@ -3,12 +3,15 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - PublicListRouterProtocol
 protocol PublicListRouterProtocol: AnyObject {
     func openPublicSetDetail(_ set: PublicSetModel)
 }
 
+// MARK: - PublicListRouter
 final class PublicListRouter: PublicListRouterProtocol {
     weak var viewController: UIViewController?
 

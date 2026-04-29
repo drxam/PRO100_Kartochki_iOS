@@ -3,13 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import Foundation
 
+// MARK: - ForgotPasswordPresenter
 final class ForgotPasswordPresenter {
     weak var view: ForgotPasswordViewInput?
     var router: ForgotPasswordRouterProtocol?
 }
 
+// MARK: - ForgotPasswordPresenter Extension
 extension ForgotPasswordPresenter: ForgotPasswordViewOutput {
     func viewDidLoad() {}
 

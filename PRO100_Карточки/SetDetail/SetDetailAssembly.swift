@@ -3,15 +3,16 @@
 //  PRO100_Карточки
 //
 
+
 import UIKit
 
+// MARK: - SetDetailMode
 enum SetDetailMode {
-    /// Мой набор: CRUD, обучение.
     case myDeck
-    /// Каталог: только просмотр и обучение.
     case publicCatalog
 }
 
+// MARK: - SetDetailAssembly
 final class SetDetailAssembly {
     func makeModule(set: CardSetModel, mode: SetDetailMode = .myDeck) -> UIViewController {
         let vc = SetDetailViewController()
