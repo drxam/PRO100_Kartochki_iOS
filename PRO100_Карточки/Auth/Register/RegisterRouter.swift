@@ -16,12 +16,9 @@ final class RegisterRouter: RegisterRouterProtocol {
 
     func openMain() {
         guard let vc = viewController, let window = vc.view.window else { return }
-        let root = window.rootViewController
         let main = assembly.makeMainTabModule()
-        main.modalPresentationStyle = .fullScreen
-        vc.dismiss(animated: true) {
-            root?.present(main, animated: true)
-        }
+        window.rootViewController = main
+        window.makeKeyAndVisible()
     }
 
     func closeToLogin() {

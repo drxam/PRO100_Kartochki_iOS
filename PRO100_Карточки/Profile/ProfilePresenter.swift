@@ -8,15 +8,33 @@ import Foundation
 final class ProfilePresenter {
     weak var view: ProfileViewInput?
     var router: ProfileRouterProtocol?
+    private var profile = UserProfileModel(
+        name: "Загрузка…",
+        email: "",
+        role: "Пользователь",
+        registeredAt: "-",
+        setsCount: 0,
+        cardsCount: 0,
+        learningProgress: LearningProgressStorage.displayPercent()
+    )
 }
 
 extension ProfilePresenter: ProfileViewOutput {
     func viewDidLoad() {
-        view?.configure(profile: MockData.userProfile)
+        view?.configure(profile: profile)
+        UserService.shared.fetchMe { [weak self] result in
+            switch result {
+            case .success(let serverProfile):
+                self?.profile = serverProfile
+                self?.view?.configure(profile: serverProfile)
+            case .failure(let error):
+                self?.view?.showError(error.localizedDescription)
+            }
+        }
     }
 
     func didTapEditProfile() {
-        view?.showInDevelopmentAlert()
+        router?.openEditProfile(profile)
     }
 
     func didTapLogout() {

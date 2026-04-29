@@ -11,6 +11,7 @@ struct CardSetModel {
     let description: String
     let cardCount: Int
     let category: String
+    let tags: [String]
     let isPrivate: Bool
     let cards: [CardModel]
 }
@@ -31,12 +32,17 @@ struct PublicSetModel {
     let cardCount: Int
     let category: String
     let authorName: String
-    let authorAvatarPlaceholder: Bool
+    /// URL аватара автора с бэка (`author.avatar_url`), если есть.
+    let authorAvatarURL: String?
+    let popularity: Int
+    let createdAt: Date
 }
 
 struct UserProfileModel {
     let name: String
     let email: String
+    let role: String
+    let registeredAt: String
     let setsCount: Int
     let cardsCount: Int
     let learningProgress: Int // 0-100

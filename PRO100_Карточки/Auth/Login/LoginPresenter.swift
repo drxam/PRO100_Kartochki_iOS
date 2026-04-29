@@ -13,12 +13,31 @@ final class LoginPresenter {
 extension LoginPresenter: LoginViewOutput {
     func viewDidLoad() {}
 
-    func didTapLogin() {
-        router?.openMain()
+    func didTapLogin(email: String, password: String) {
+        let trimmedEmail = email.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard ValidationRules.isValidEmail(trimmedEmail) else {
+            view?.showMessage("Введите корректный email.")
+            return
+        }
+        guard !password.isEmpty else {
+            view?.showMessage("Введите пароль.")
+            return
+        }
+
+        view?.setLoading(true)
+        AuthService.shared.login(email: trimmedEmail, password: password) { [weak self] result in
+            self?.view?.setLoading(false)
+            switch result {
+            case .success:
+                self?.router?.openMain()
+            case .failure(let error):
+                self?.view?.showMessage(error.localizedDescription)
+            }
+        }
     }
 
     func didTapForgotPassword() {
-        view?.showInDevelopmentAlert()
+        router?.openForgotPassword()
     }
 
     func didTapRegister() {

@@ -9,6 +9,7 @@ protocol ProfileViewInput: AnyObject {
     func showInDevelopmentAlert()
     func showLogoutConfirm(onConfirm: @escaping () -> Void)
     func configure(profile: UserProfileModel)
+    func showError(_ message: String)
 }
 
 protocol ProfileViewOutput: AnyObject {
@@ -22,13 +23,22 @@ final class ProfileViewController: UIViewController {
 
     private let scrollView = UIScrollView()
     private let contentView = UIView()
+    private let stackView = UIStackView()
+
+    private let headerCard = UIView()
     private let avatarView = UIView()
+    private let avatarInitialsLabel = UILabel()
     private let nameLabel = UILabel()
     private let emailLabel = UILabel()
-    private let statsStack = UIStackView()
+    private let roleBadgeLabel = UILabel()
+    private let dateLabel = UILabel()
+
+    private let statsCard = UIView()
     private let setsCountLabel = UILabel()
     private let cardsCountLabel = UILabel()
     private let progressLabel = UILabel()
+
+    private let actionsCard = UIView()
     private let editButton = UIButton(type: .system)
     private let logoutButton = UIButton(type: .system)
 
@@ -39,97 +49,259 @@ final class ProfileViewController: UIViewController {
     }
 
     private func setupUI() {
-        view.backgroundColor = .systemBackground
+        view.backgroundColor = DS.bgTop
+        applyDarkNavBar()
         title = "Профиль"
+        navigationController?.navigationBar.prefersLargeTitles = true
 
         scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.backgroundColor = .clear
         contentView.translatesAutoresizingMaskIntoConstraints = false
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(scrollView)
         scrollView.addSubview(contentView)
+        contentView.addSubview(stackView)
 
-        avatarView.backgroundColor = .tertiarySystemFill
-        avatarView.layer.cornerRadius = 50
-        avatarView.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(avatarView)
+        stackView.axis = .vertical
+        stackView.spacing = 14
 
-        nameLabel.font = .systemFont(ofSize: 22, weight: .semibold)
-        nameLabel.textAlignment = .center
-        nameLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(nameLabel)
-
-        emailLabel.font = .systemFont(ofSize: 15)
-        emailLabel.textColor = .secondaryLabel
-        emailLabel.textAlignment = .center
-        emailLabel.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(emailLabel)
-
-        statsStack.axis = .vertical
-        statsStack.spacing = 12
-        statsStack.alignment = .leading
-        statsStack.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(statsStack)
-        setsCountLabel.font = .systemFont(ofSize: 15)
-        cardsCountLabel.font = .systemFont(ofSize: 15)
-        progressLabel.font = .systemFont(ofSize: 15)
-        for l in [setsCountLabel, cardsCountLabel, progressLabel] {
-            l.textColor = .secondaryLabel
-            statsStack.addArrangedSubview(l)
-        }
-
-        editButton.setTitle("Редактировать профиль", for: .normal)
-        editButton.backgroundColor = AppConstants.accentColor
-        editButton.setTitleColor(.white, for: .normal)
-        editButton.layer.cornerRadius = 10
-        editButton.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
-        editButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(editButton)
-
-        logoutButton.setTitle("Выйти", for: .normal)
-        logoutButton.setTitleColor(.systemRed, for: .normal)
-        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
-        logoutButton.translatesAutoresizingMaskIntoConstraints = false
-        contentView.addSubview(logoutButton)
+        setupHeaderCard()
+        setupStatsCard()
+        setupActionsCard()
 
         NSLayoutConstraint.activate([
             scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
-            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
-            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
-            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
-            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
-            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor),
 
-            avatarView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 32),
-            avatarView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            avatarView.widthAnchor.constraint(equalToConstant: 100),
-            avatarView.heightAnchor.constraint(equalToConstant: 100),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.contentLayoutGuide.trailingAnchor),
+            contentView.topAnchor.constraint(equalTo: scrollView.contentLayoutGuide.topAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.contentLayoutGuide.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.frameLayoutGuide.widthAnchor),
 
-            nameLabel.topAnchor.constraint(equalTo: avatarView.bottomAnchor, constant: 16),
-            nameLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            nameLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-
-            emailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
-            emailLabel.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            emailLabel.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-
-            statsStack.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 24),
-            statsStack.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-
-            editButton.topAnchor.constraint(equalTo: statsStack.bottomAnchor, constant: 24),
-            editButton.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 24),
-            editButton.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -24),
-            editButton.heightAnchor.constraint(equalToConstant: 48),
-
-            logoutButton.topAnchor.constraint(equalTo: editButton.bottomAnchor, constant: 24),
-            logoutButton.centerXAnchor.constraint(equalTo: contentView.centerXAnchor),
-            logoutButton.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -32)
+            stackView.leadingAnchor.constraint(equalTo: contentView.leadingAnchor, constant: 14),
+            stackView.trailingAnchor.constraint(equalTo: contentView.trailingAnchor, constant: -14),
+            stackView.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 12),
+            stackView.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -20)
         ])
     }
 
-    @objc private func editTapped() { output?.didTapEditProfile() }
-    @objc private func logoutTapped() { output?.didTapLogout() }
+    private func setupHeaderCard() {
+        styleCard(headerCard)
+        stackView.addArrangedSubview(headerCard)
+
+        // Gradient avatar
+        let avatarGrad = CAGradientLayer()
+        avatarGrad.colors = [DS.royal.cgColor, DS.crimson.cgColor]
+        avatarGrad.startPoint = CGPoint(x: 0, y: 0)
+        avatarGrad.endPoint   = CGPoint(x: 1, y: 1)
+        avatarView.layer.insertSublayer(avatarGrad, at: 0)
+        avatarView.layer.cornerRadius = 44
+        avatarView.layer.cornerCurve  = .continuous
+        avatarView.clipsToBounds = true
+        avatarView.translatesAutoresizingMaskIntoConstraints = false
+
+        DispatchQueue.main.async {
+            avatarGrad.frame = self.avatarView.bounds
+        }
+
+        headerCard.addSubview(avatarView)
+
+        avatarInitialsLabel.font = .app(30, .black)
+        avatarInitialsLabel.textColor = .white
+        avatarInitialsLabel.textAlignment = .center
+        avatarInitialsLabel.translatesAutoresizingMaskIntoConstraints = false
+        avatarView.addSubview(avatarInitialsLabel)
+
+        nameLabel.font = .app(22, .black)
+        nameLabel.textColor = .white
+        nameLabel.textAlignment = .center
+        nameLabel.numberOfLines = 2
+        nameLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerCard.addSubview(nameLabel)
+
+        emailLabel.font = .app(15, .medium)
+        emailLabel.textColor = DS.textDim
+        emailLabel.textAlignment = .center
+        emailLabel.numberOfLines = 2
+        emailLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerCard.addSubview(emailLabel)
+
+        roleBadgeLabel.font = .app(12, .bold)
+        roleBadgeLabel.textColor = .white
+        roleBadgeLabel.backgroundColor = DS.royal.withAlphaComponent(0.7)
+        roleBadgeLabel.layer.cornerRadius = 11
+        roleBadgeLabel.layer.borderWidth = 1
+        roleBadgeLabel.layer.borderColor = DS.royal.withAlphaComponent(0.5).cgColor
+        roleBadgeLabel.clipsToBounds = true
+        roleBadgeLabel.textAlignment = .center
+        roleBadgeLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerCard.addSubview(roleBadgeLabel)
+
+        dateLabel.font = .app(13, .medium)
+        dateLabel.textColor = DS.textMuted
+        dateLabel.textAlignment = .center
+        dateLabel.numberOfLines = 2
+        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        headerCard.addSubview(dateLabel)
+
+        NSLayoutConstraint.activate([
+            avatarView.topAnchor.constraint(equalTo: headerCard.topAnchor, constant: 18),
+            avatarView.centerXAnchor.constraint(equalTo: headerCard.centerXAnchor),
+            avatarView.widthAnchor.constraint(equalToConstant: 88),
+            avatarView.heightAnchor.constraint(equalToConstant: 88),
+
+            avatarInitialsLabel.centerXAnchor.constraint(equalTo: avatarView.centerXAnchor),
+            avatarInitialsLabel.centerYAnchor.constraint(equalTo: avatarView.centerYAnchor),
+
+            nameLabel.topAnchor.constraint(equalTo: avatarView.bottomAnchor, constant: 14),
+            nameLabel.leadingAnchor.constraint(equalTo: headerCard.leadingAnchor, constant: 16),
+            nameLabel.trailingAnchor.constraint(equalTo: headerCard.trailingAnchor, constant: -16),
+
+            emailLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 4),
+            emailLabel.leadingAnchor.constraint(equalTo: headerCard.leadingAnchor, constant: 16),
+            emailLabel.trailingAnchor.constraint(equalTo: headerCard.trailingAnchor, constant: -16),
+
+            roleBadgeLabel.topAnchor.constraint(equalTo: emailLabel.bottomAnchor, constant: 10),
+            roleBadgeLabel.centerXAnchor.constraint(equalTo: headerCard.centerXAnchor),
+            roleBadgeLabel.heightAnchor.constraint(equalToConstant: 22),
+            roleBadgeLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 90),
+
+            dateLabel.topAnchor.constraint(equalTo: roleBadgeLabel.bottomAnchor, constant: 10),
+            dateLabel.leadingAnchor.constraint(equalTo: headerCard.leadingAnchor, constant: 16),
+            dateLabel.trailingAnchor.constraint(equalTo: headerCard.trailingAnchor, constant: -16),
+            dateLabel.bottomAnchor.constraint(equalTo: headerCard.bottomAnchor, constant: -16)
+        ])
+    }
+
+    private func setupStatsCard() {
+        styleCard(statsCard)
+        stackView.addArrangedSubview(statsCard)
+
+        let titleLabel = sectionTitle("Статистика")
+        statsCard.addSubview(titleLabel)
+
+        setsCountLabel.font = .app(15, .semibold)
+        cardsCountLabel.font = .app(15, .semibold)
+        progressLabel.font = .app(15, .semibold)
+        progressLabel.numberOfLines = 0
+
+        for label in [setsCountLabel, cardsCountLabel, progressLabel] {
+            label.textColor = DS.textDim
+            label.translatesAutoresizingMaskIntoConstraints = false
+            statsCard.addSubview(label)
+        }
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: statsCard.topAnchor, constant: 14),
+            titleLabel.leadingAnchor.constraint(equalTo: statsCard.leadingAnchor, constant: 14),
+            titleLabel.trailingAnchor.constraint(equalTo: statsCard.trailingAnchor, constant: -14),
+
+            setsCountLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 10),
+            setsCountLabel.leadingAnchor.constraint(equalTo: statsCard.leadingAnchor, constant: 14),
+            setsCountLabel.trailingAnchor.constraint(equalTo: statsCard.trailingAnchor, constant: -14),
+
+            cardsCountLabel.topAnchor.constraint(equalTo: setsCountLabel.bottomAnchor, constant: 8),
+            cardsCountLabel.leadingAnchor.constraint(equalTo: statsCard.leadingAnchor, constant: 14),
+            cardsCountLabel.trailingAnchor.constraint(equalTo: statsCard.trailingAnchor, constant: -14),
+
+            progressLabel.topAnchor.constraint(equalTo: cardsCountLabel.bottomAnchor, constant: 8),
+            progressLabel.leadingAnchor.constraint(equalTo: statsCard.leadingAnchor, constant: 14),
+            progressLabel.trailingAnchor.constraint(equalTo: statsCard.trailingAnchor, constant: -14),
+            progressLabel.bottomAnchor.constraint(equalTo: statsCard.bottomAnchor, constant: -14)
+        ])
+    }
+
+    private func setupActionsCard() {
+        styleCard(actionsCard)
+        stackView.addArrangedSubview(actionsCard)
+
+        let titleLabel = sectionTitle("Действия")
+        actionsCard.addSubview(titleLabel)
+
+        // Edit button — gradient
+        let editGradBtn = GradientButton()
+        editGradBtn.setTitle("Редактировать профиль", for: .normal)
+        editGradBtn.setTitleColor(.white, for: .normal)
+        editGradBtn.titleLabel?.font = .app(16, .bold)
+        editGradBtn.layer.shadowColor   = DS.royal.cgColor
+        editGradBtn.layer.shadowOpacity = 0.4
+        editGradBtn.layer.shadowRadius  = 14
+        editGradBtn.layer.shadowOffset  = CGSize(width: 0, height: 6)
+        editGradBtn.addTarget(self, action: #selector(editTapped), for: .touchUpInside)
+        editGradBtn.translatesAutoresizingMaskIntoConstraints = false
+        actionsCard.addSubview(editGradBtn)
+        // keep reference via editButton tag workaround — reassign
+        editButton.removeFromSuperview()
+        actionsCard.addSubview(editButton)
+        editButton.isHidden = true   // hidden — использован editGradBtn
+
+        logoutButton.setTitle("Выйти из аккаунта", for: .normal)
+        logoutButton.setTitleColor(DS.crimson, for: .normal)
+        logoutButton.titleLabel?.font = .app(16, .bold)
+        logoutButton.layer.cornerRadius = 22
+        logoutButton.layer.cornerCurve  = .continuous
+        logoutButton.layer.borderWidth  = 1.5
+        logoutButton.layer.borderColor  = DS.crimson.withAlphaComponent(0.5).cgColor
+        logoutButton.backgroundColor    = DS.crimson.withAlphaComponent(0.08)
+        logoutButton.addTarget(self, action: #selector(logoutTapped), for: .touchUpInside)
+        logoutButton.translatesAutoresizingMaskIntoConstraints = false
+        actionsCard.addSubview(logoutButton)
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: actionsCard.topAnchor, constant: 14),
+            titleLabel.leadingAnchor.constraint(equalTo: actionsCard.leadingAnchor, constant: 14),
+            titleLabel.trailingAnchor.constraint(equalTo: actionsCard.trailingAnchor, constant: -14),
+
+            editGradBtn.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 12),
+            editGradBtn.leadingAnchor.constraint(equalTo: actionsCard.leadingAnchor, constant: 14),
+            editGradBtn.trailingAnchor.constraint(equalTo: actionsCard.trailingAnchor, constant: -14),
+            editGradBtn.heightAnchor.constraint(equalToConstant: 50),
+
+            logoutButton.topAnchor.constraint(equalTo: editGradBtn.bottomAnchor, constant: 10),
+            logoutButton.leadingAnchor.constraint(equalTo: actionsCard.leadingAnchor, constant: 14),
+            logoutButton.trailingAnchor.constraint(equalTo: actionsCard.trailingAnchor, constant: -14),
+            logoutButton.heightAnchor.constraint(equalToConstant: 50),
+            logoutButton.bottomAnchor.constraint(equalTo: actionsCard.bottomAnchor, constant: -14),
+        ])
+        return   // constraints already set above
+
+        // constraints handled above via return
+    }
+
+    private func styleCard(_ view: UIView) {
+        view.backgroundColor    = DS.glass
+        view.layer.cornerRadius = 22
+        view.layer.cornerCurve  = .continuous
+        view.layer.borderWidth  = 1
+        view.layer.borderColor  = DS.glassBdr.cgColor
+        view.layer.shadowColor  = UIColor.black.cgColor
+        view.layer.shadowOpacity = 0.35
+        view.layer.shadowRadius  = 18
+        view.layer.shadowOffset  = CGSize(width: 0, height: 8)
+        view.layer.masksToBounds = false
+        view.translatesAutoresizingMaskIntoConstraints = false
+    }
+
+    private func sectionTitle(_ text: String) -> UILabel {
+        let label = UILabel()
+        label.text = text
+        label.font = .app(15, .bold)
+        label.textColor = DS.textDim
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }
+
+    @objc private func editTapped() {
+        output?.didTapEditProfile()
+    }
+
+    @objc private func logoutTapped() {
+        output?.didTapLogout()
+    }
 }
 
 extension ProfileViewController: ProfileViewInput {
@@ -147,10 +319,21 @@ extension ProfileViewController: ProfileViewInput {
     }
 
     func configure(profile: UserProfileModel) {
-        nameLabel.text = profile.name
+        let trimmedName = profile.name.trimmingCharacters(in: .whitespacesAndNewlines)
+        let displayName = trimmedName.isEmpty ? "Без имени" : profile.name
+
+        nameLabel.text = displayName
+        avatarInitialsLabel.text = String(displayName.prefix(1)).uppercased()
         emailLabel.text = profile.email
-        setsCountLabel.text = "Количество наборов: \(profile.setsCount)"
-        cardsCountLabel.text = "Количество карточек: \(profile.cardsCount)"
+        roleBadgeLabel.text = "  \(profile.role)  "
+        dateLabel.text = "Дата регистрации: \(profile.registeredAt)"
+
+        setsCountLabel.text = "Наборов: \(profile.setsCount)"
+        cardsCountLabel.text = "Карточек: \(profile.cardsCount)"
         progressLabel.text = "Прогресс обучения: \(profile.learningProgress)%"
+    }
+
+    func showError(_ message: String) {
+        showTopBanner(message)
     }
 }

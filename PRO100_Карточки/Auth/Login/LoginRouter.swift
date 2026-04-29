@@ -8,6 +8,7 @@ import UIKit
 protocol LoginRouterProtocol: AnyObject {
     func openMain()
     func openRegister()
+    func openForgotPassword()
 }
 
 final class LoginRouter: LoginRouterProtocol {
@@ -19,15 +20,25 @@ final class LoginRouter: LoginRouterProtocol {
     }
 
     func openMain() {
+        guard let window = viewController?.view.window else { return }
         let main = assembly.makeMainTabModule()
-        main.modalPresentationStyle = .fullScreen
-        viewController?.present(main, animated: true)
+        window.rootViewController = main
+        window.makeKeyAndVisible()
     }
 
     func openRegister() {
         let assembly = RegisterAssembly()
         let registerVC = assembly.makeModule()
-        registerVC.modalPresentationStyle = .fullScreen
-        viewController?.present(registerVC, animated: true)
+        let nav = UINavigationController(rootViewController: registerVC)
+        nav.modalPresentationStyle = .fullScreen
+        viewController?.present(nav, animated: true)
+    }
+
+    func openForgotPassword() {
+        let assembly = ForgotPasswordAssembly()
+        let forgotVC = assembly.makeModule()
+        let nav = UINavigationController(rootViewController: forgotVC)
+        nav.modalPresentationStyle = .fullScreen
+        viewController?.present(nav, animated: true)
     }
 }

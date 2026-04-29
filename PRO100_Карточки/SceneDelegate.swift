@@ -16,8 +16,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         self.window = window
+        UITabBar.applyDarkStyle()
+        window.overrideUserInterfaceStyle = .dark
         let assembly = AppAssembly()
-        let rootVC = assembly.makeAuthModule()
+        let rootVC = AuthStorage.shared.isAuthorized ? assembly.makeMainTabModule() : assembly.makeAuthModule()
         window.rootViewController = rootVC
         window.makeKeyAndVisible()
     }
